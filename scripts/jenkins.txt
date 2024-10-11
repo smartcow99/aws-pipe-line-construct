@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    environment {
+        DB_URL = 'database_url'  // DB URL 설정
+        DB_USER = 'username'                 // DB 사용자명 설정
+        DB_PW = 'password'                   // DB 비밀번호 설정
+        AWS_REGION = 'region'      // AWS 리전 설정
+        AWS_CREDENTIALS = credentials('aws_id') // AWS 자격 증명 ID
+        EC2_KEY_PATH = '/key/path'  // EC2 키 파일 경로 설정
+        EC2_USER = 'ubuntu'  // EC2 사용자 설정
+        EC2_HOST = 'host_ip'  // EC2 인스턴스의 공인 IP 설정
+        S3_BUCKET = 'bucket_name'  // S3 버킷 이름
+        JAR_FILE = 'file_name'  // .jar 파일명
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                echo "DB User: ${DB_USER}"
+                echo "DB Password: ${DB_PW}"
+                git branch: 'main', url: 'github_url'
+            }
+        }
+
+        stage('Build') {   
+            steps {
+                dir('./demoApp') {                   
+                    sh 'chmod +x gradlew'                    
+                    sh './gradlew clean build -x test'   // *.jar
+                    sh 'echo $WORKSPACE'
+                }
+            }
+        }
+        
+        stage('Copy JAR') {  // 큰따옴표 오류 수정  
+            steps {
+                script {
+                    def jarFile = 'demoApp/build/libs/demoApp-0.0.1-SNAPSHOT.jar'
+                    def targetDir = '/var/jenkins_home/appjar/'
+                    sh """
+                        chmod +x ${jarFile}
+                        mkdir -p ${targetDir}
+                        cp ${jarFile} ${targetDir}
+                    """
+                }
+            }
+        }
+        
+        stage('Upload to S3') {
+            steps {
+                script {
+                    // AWS CLI 설치가 완료되었다고 가정
+                    sh '''
+                        # AWS CLI 구성
+                        aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+                        aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+                        aws configure set default.region ${AWS_REGION}
+                        
+                        # S3에 파일 업로드
+                        aws s3 cp /var/jenkins_home/appjar/demoApp-0.0.1-SNAPSHOT.jar s3://${S3_BUCKET}/
+                    '''
+                }
+            }
+        }
+        
+        stage('Deploy to EC2') {
+            steps {
+                script {
+                    sh """    
+                        ssh -o StrictHostKeyChecking=no -i ${EC2_KEY_PATH} ${EC2_USER}@${EC2_HOST} << 'EOF'
+                            aws s3 cp s3://${S3_BUCKET}/${JAR_FILE} /home/${EC2_USER}/app/${JAR_FILE}
+                    """
+                }
+            }
+        }
+    }
+}
