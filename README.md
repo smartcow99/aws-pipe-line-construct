@@ -51,7 +51,7 @@ docker run --name myjenkins --privileged -p 8080:8080 -v $(pwd)/appjardir:/var/j
 ### 3. Jenkins 파이프라인 설정 🔧
 파이프라인 스크립트를 통해 GitHub 리포지토리에서 코드를 클론하고, Gradle을 사용하여 빌드한 후 AWS S3에 업로드하고, EC2 인스턴스에 배포한다.
 
-`environment` 블록은 Jenkins Pipeline에서 전역적으로 사용할 환경 변수를 정의하는 섹션이다. 각 변수가 지정된 값을 파이프라인 전반에 걸쳐 사용되며, 특히 **AWS 관련 자격 증명**, **데이터베이스 정보**, **EC2 배포**와 같은 외부 서비스와의 통신에 중요한 역할을 합니다.
+`environment` 블록은 Jenkins Pipeline에서 전역적으로 사용할 환경 변수를 정의하는 섹션이다. 각 변수가 지정된 값을 파이프라인 전반에 걸쳐 사용되며, 특히 **AWS 관련 자격 증명**, **데이터베이스 정보**, **EC2 배포**와 같은 외부 서비스와의 통신에 중요한 역할을 한다.
 
 ```groovy
 environment {
@@ -97,7 +97,7 @@ stages {
 
 이 스테이지는 Jenkins 서버에 있는 빌드된 .jar 파일을 AWS S3에 업로드하여, 이후 다른 서비스나 EC2 인스턴스에서 사용할 수 있도록 한다. 해당 작업을 통해애플리케이션 파일을 안전하게 저장하고, 원격 서버로 전달할 수 있다.
 
-AWS CLI의 s3 cp 명령을 사용하여 로컬 경로`(/var/jenkins_home/appjar/demoApp-0.0.1-SNAPSHOT.jar)`에 있는 파일을 S3 버킷`(s3://${S3_BUCKET}/)`으로 복사합니다.` ${S3_BUCKET}`은 파이프라인의 환경 변수로 설정된 S3 버킷의 이름을 참조한다.
+AWS CLI의 s3 cp 명령을 사용하여 로컬 경로`(/var/jenkins_home/appjar/demoApp-0.0.1-SNAPSHOT.jar)`에 있는 파일을 S3 버킷`(s3://${S3_BUCKET}/)`으로 복사합니다. `${S3_BUCKET}`은 파이프라인의 환경 변수로 설정된 S3 버킷의 이름을 참조한다.
 
 ```groovy
 stage('Upload to S3') {
@@ -111,7 +111,7 @@ stage('Upload to S3') {
         }
 ```
 
-이 스테이지는 Jenkins 파이프라인에서 S3에 업로드된 .jar 파일을 EC2 인스턴스에 배포하는 작업을 수행합니다. EC2 인스턴스에 SSH로 접속한 후, S3에서 .jar 파일을 다운로드하여 배포하는 방식이다. 
+이 스테이지는 Jenkins 파이프라인에서 S3에 업로드된 .jar 파일을 EC2 인스턴스에 배포하는 작업을 수행한다. EC2 인스턴스에 SSH로 접속한 후, S3에서 .jar 파일을 다운로드하여 배포하는 방식이다. 
 
 AWS EC2 인스턴스에 SSH로 접속하여, S3에서 빌드된 애플리케이션 파일을 다운로드하고 배포하는 단계이다.
 
