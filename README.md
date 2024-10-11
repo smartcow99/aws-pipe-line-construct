@@ -10,26 +10,41 @@
 
 
 ## 개요 📝
-이 프로젝트는 Jenkins를 Docker 환경에 설치하고 AWS를 통해 CI/CD 파이프라인을 구성하는 방법에 대해 설명합니다. Jenkins를 사용해 소스 코드를 빌드하고, AWS S3에 빌드 파일을 업로드한 후, EC2 인스턴스에 배포하는 전 과정을 자동화한다. 이를 통해 소프트웨어의 배포 시간을 단축하고, 효율적인 배포 프로세스를 구성할 수 있다.
+Jenkins를 Docker 환경에 설치하고 AWS를 통해 CI/CD 파이프라인을 구성하는 방법에 대해 설명한다.Jenkins를 사용해 소스 코드를 빌드하고, AWS S3에 빌드 파일을 업로드한 후, EC2 인스턴스에 배포하는 전 과정을 자동화한다. 이를 통해 소프트웨어의 배포 시간을 단축하고, 효율적인 배포 프로세스를 구성할 수 있다.
 
 또한, 물리적인 인프라를 함께 사용함으로써 **AWS 클라우드 리소스 사용량을 최적화**하고, **비용을 줄일 수 있는 이점**도 있다. 빌드 및 테스트와 같은 무거운 작업은 로컬 또는 사내 인프라에서 처리하고, 배포와 같은 최종 단계만 AWS를 활용하는 방식으로 클라우드 비용을 절감할 수 있다.
 
-### 사용 기술 💻
-- **AWS:** EC2, S3, RDS
-- **CI/CD:** Jenkins, Docker
-- **Version Control:** GitHub
-- **기타:** Ngrok, Inotify, Shell Script
+### 아키텍처 🏚
+<div align="center">
+  <img src ="https://github.com/user-attachments/assets/225a354b-7fb0-4ee2-94c5-5252a54a5b0a" width=70%>
+</div>
+
+### 시스템 환경 및 소프트웨어💻
+
+| **항목**            | **상세 정보**                                                                                  |
+|---------------------|-----------------------------------------------------------------------------------------------|
+| **운영 체제**       | <img src="https://img.shields.io/badge/Ubuntu 22.04.5 LTS-E95420?style=flat-square&logo=Ubuntu&logoColor=white"/>  |
+| **클라우드 서비스** | <img src="https://img.shields.io/badge/amazonec2-FF9900?style=flat-square&logo=amazonec2&logoColor=white"/> <br> <img src="https://img.shields.io/badge/amazonrds-527FFF?style=flat-square&logo=amazonrds&logoColor=white"/>  <br><img src="https://img.shields.io/badge/amazons3-569A31?style=flat-square&logo=amazons3&logoColor=white"/>  |
+| **CI/CD 도구**      | <img src="https://img.shields.io/badge/jenkins-D24939?style=flat-square&logo=jenkins&logoColor=white"/> <br> <img src="https://img.shields.io/badge/ngrok-1F1E37?style=flat-square&logo=ngrok&logoColor=white"/>  |
+| **터미널 에뮬레이터** | <img src="https://img.shields.io/badge/MobaXterm-241F31?style=flat-square&logo=MobaXterm&logoColor=white"/> <br> <img src="https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white"/>   |
+| **컨테이너화**       | <img src="https://img.shields.io/badge/Docker 27.3.1-2496ED?style=flat-square&logo=Docker&logoColor=white"/>  |
+| **가상화 소프트웨어** | <img src="https://img.shields.io/badge/VirtualBox-183A61?style=flat-square&logo=virtualbox&logoColor=white"/>  |
+| **CLI 도구**          | <img src="https://img.shields.io/badge/AWS_CLI_v2-232F3E?style=flat-square&logo=amazonaws&logoColor=white"/>  |
+
+
+
+
   
 
 ## 과정 🚀
-**1. Docker로 Jenkins 설치** <br>
+**1. Docker로 Jenkins 설치 ⬇️** <br>
 **2. Jenkins 컨테이너 실행 ⚙️** <br>
 **3. Jenkins 파이프라인 설정 🔧** <br>
 **4. AWS S3에 업로드 ☁️** <br>
 **5. EC2에 배포 🖥️** <br>
 
 
-### 1. Docker로 Jenkins 설치
+### 1. Docker로 Jenkins 설치 ⬇️
 먼저, Jenkins를 Docker로 실행하여 빠르게 CI/CD 환경을 구축한다.
 
 ```bash
@@ -219,40 +234,40 @@ pipeline {
 </details>
 
 ### 4. AWS S3에 업로드 ☁️
-빌드된 .jar 파일을 AWS S3에 업로드하여 배포 준비를 마칩니다.
+빌드된 .jar 파일을 AWS S3에 업로드하여 배포 준비를 마친다.
 
 ### 5. EC2에 배포 🖥️
-S3에서 EC2 인스턴스로 파일을 전송하여 애플리케이션을 배포합니다.
+S3에서 EC2 인스턴스로 파일을 전송하여 애플리케이션을 배포한다.
 
 <br>
 
 ## Trouble Shooting 🔥
 
-| 이 프로젝트에서는 여러 가지 기술을 사용하면서 발생한 이슈들과 그 해결 방법을 정리하였습니다.
+| 이 프로젝트에서는 여러 가지 기술을 사용하면서 발생한 이슈들과 그 해결 방법을 정리하였다. 
 
 ### 1. **Application.properties 은닉 관련 이슈 🔒**
-   - **문제:** AWS EC2 및 RDS 관련 개인정보를 GitHub에 올릴 수 없기에 Jenkins에서 환경변수로 관리하는 방법을 선택했습니다. 이 과정에서 빌드 파일 실행 시 환경변수를 추가해주는 옵션을 반드시 추가해야 한다는 문제가 발생했습니다.
-   - **해결 방법:** Jenkins의 **환경 변수 설정**을 통해 비밀 정보를 안전하게 관리하고, 빌드 스크립트에서 해당 환경변수를 참조하도록 수정했습니다.
+   - **문제:** AWS EC2 및 RDS 관련 개인정보를 GitHub에 올릴 수 없기에 Jenkins에서 환경변수로 관리하는 방법을 선택했다. 이 과정에서 빌드 파일 실행 시 환경변수를 추가해주는 옵션을 반드시 추가해야 한다는 문제가 발생했다.
+   - **해결 방법:** Jenkins의 **환경 변수 설정**을 통해 비밀 정보를 안전하게 관리하고, 빌드 스크립트에서 해당 환경변수를 참조하도록 수정했다.
 
 ### 2. **관리자 권한 이슈 🔑**
-   - **문제:** 빌드 파일 실행, 프로세스 실행 검사, 프로세스 종료 등 여러 명령어 실행 시 지속적으로 관리자 권한이 필요했습니다. 이로 인해 여러 번의 오류가 발생하고 시간 소모가 있었습니다.
-   - **해결 방법:** 필요한 권한을 부여하여 스크립트가 문제 없이 실행될 수 있도록 설정했습니다.
+   - **문제:** 빌드 파일 실행, 프로세스 실행 검사, 프로세스 종료 등 여러 명령어 실행 시 지속적으로 관리자 권한이 필요했다. 이로 인해 여러 번의 오류가 발생하고 시간 소모가 있었다.
+   - **해결 방법:** 필요한 권한을 부여하여 스크립트가 문제 없이 실행될 수 있도록 설정했다.
 
 ### 3. **Shell Script 문법 이슈 🐚**
-   - **문제:** Shell Script의 띄어쓰기나 단락 들여쓰기 문제로 인해 지속적인 오류가 발생했습니다. 스크립트 작성 시 작은 실수로 인해 큰 문제가 발생할 수 있음을 깨달았습니다.
-   - **해결 방법:** 스크립트를 작성한 후, 코드 리뷰 및 철저한 확인 과정을 통해 문법 오류를 수정했습니다.
+   - **문제:** Shell Script의 띄어쓰기나 단락 들여쓰기 문제로 인해 지속적인 오류가 발생했다. 스크립트 작성 시 작은 실수로 인해 큰 문제가 발생할 수 있음을 깨달았다.
+   - **해결 방법:** 스크립트를 작성한 후, 코드 리뷰 및 철저한 확인 과정을 통해 문법 오류를 수정했다.
 
 ### 4. **Inotify 파일 수정 종류 이슈 🔄**
-   - **문제:** S3에서 파일을 받아오는 과정이 기존 파일에 대한 수정이 아닌 새로운 파일 생성이라는 사실을 여러 번의 테스트를 통해 알게 되었습니다. 이는 inotify가 기존 파일의 수정이 아닌 파일 생성 이벤트를 감지하도록 수정해야 함을 의미했습니다.
-   - **해결 방법:** `inotifywait`를 사용하여 폴더 내부의 변화(파일 생성)를 감지하도록 스크립트를 변경했습니다.
+   - **문제:** S3에서 파일을 받아오는 과정이 기존 파일에 대한 수정이 아닌 새로운 파일 생성이라는 사실을 여러 번의 테스트를 통해 알게 되었다. 이는 inotify가 기존 파일의 수정이 아닌 파일 생성 이벤트를 감지하도록 수정해야 함을 의미했다.
+   - **해결 방법:** `inotifywait`를 사용하여 폴더 내부의 변화(파일 생성)를 감지하도록 스크립트를 변경했다.
 
 ### 5. **AWS 권한 이슈 ☁️**
-   - **문제:** `.pem` 키페어에 쓰기 권한이 설정되어 있을 경우, SSH 연결 시 오류가 발생했습니다. 이로 인해 AWS CLI를 통한 작업이 실패했습니다.
-   - **해결 방법:** `chmod 400` 명령어를 사용하여 키 파일의 권한을 제한하고, Jenkins AWS Credentials Plugin을 통해 개인 정보를 안전하게 보호하며 AWS CLI 권한을 획득했습니다.
+   - **문제:** `.pem` 키페어에 쓰기 권한이 설정되어 있을 경우, SSH 연결 시 오류가 발생했다. 이로 인해 AWS CLI를 통한 작업이 실패했다.
+   - **해결 방법:** `chmod 400` 명령어를 사용하여 키 파일의 권한을 제한하고, Jenkins AWS Credentials Plugin을 통해 개인 정보를 안전하게 보호하며 AWS CLI 권한을 획득했다.
 
 ### 6. **Docker 바인드 이슈 🐳**
-   - **문제:** Docker 이미지와 기존 Ubuntu 환경의 파일 공유를 위해 Docker 바인드를 사용해야 했습니다. 이 과정에서 경로 설정이나 권한 문제로 어려움이 있었습니다.
-   - **해결 방법:** Docker의 `-v` 옵션을 사용하여 호스트의 디렉토리를 컨테이너와 연결하고, 권한을 적절하게 설정하여 파일 공유 문제를 해결했습니다.
+   - **문제:** Docker 이미지와 기존 Ubuntu 환경의 파일 공유를 위해 Docker 바인드를 사용해야 했다. 이 과정에서 경로 설정이나 권한 문제로 어려움이 있었다.
+   - **해결 방법:** Docker의 `-v` 옵션을 사용하여 호스트의 디렉토리를 컨테이너와 연결하고, 권한을 적절하게 설정하여 파일 공유 문제를 해결했다.
 
 ---
 
