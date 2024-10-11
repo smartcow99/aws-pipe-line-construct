@@ -1,10 +1,25 @@
 # AWS 및 Jenkins를 활용한 CI/CD 파이프라인 구축
 
+<h2 style="font-size: 25px;"> TEAM 👨‍👨‍👧 <br>
+</h2>
+
+|<img src="https://avatars.githubusercontent.com/u/81280628?v=4" width="100" height="100"/>|<img src="https://avatars.githubusercontent.com/u/86951396?v=4" width="100" height="100"/>|<img src="https://avatars.githubusercontent.com/u/139302518?v=4" width="100" height="100"/>|<img src="https://avatars.githubusercontent.com/u/78792358?v=4" width="100" height="100"/>
+|:-:|:-:|:-:|:-:|
+|[@손대현](https://github.com/DaeHyeonSon)|[@이아영](https://github.com/ayleeee)|[@곽병찬](https://github.com/gato-46)|[@박현우](https://github.com/smartcow99)
+---
+
+
 ## 개요 📝
 이 프로젝트는 Jenkins를 Docker 환경에 설치하고 AWS를 통해 CI/CD 파이프라인을 구성하는 방법에 대해 설명합니다. Jenkins를 사용해 소스 코드를 빌드하고, AWS S3에 빌드 파일을 업로드한 후, EC2 인스턴스에 배포하는 전 과정을 자동화한다. 이를 통해 소프트웨어의 배포 시간을 단축하고, 효율적인 배포 프로세스를 구성할 수 있다.
 
 또한, 물리적인 인프라를 함께 사용함으로써 **AWS 클라우드 리소스 사용량을 최적화**하고, **비용을 줄일 수 있는 이점**도 있다. 빌드 및 테스트와 같은 무거운 작업은 로컬 또는 사내 인프라에서 처리하고, 배포와 같은 최종 단계만 AWS를 활용하는 방식으로 클라우드 비용을 절감할 수 있다.
 
+### 사용 기술 💻
+- **AWS:** EC2, S3, RDS
+- **CI/CD:** Jenkins, Docker
+- **Version Control:** GitHub
+- **기타:** Ngrok, Inotify, Shell Script
+  
 
 ## 과정 🚀
 **1. Docker로 Jenkins 설치** <br>
@@ -12,13 +27,6 @@
 **3. Jenkins 파이프라인 설정 🔧** <br>
 **4. AWS S3에 업로드 ☁️** <br>
 **5. EC2에 배포 🖥️** <br>
-
-
-## 사용 기술 💻
-- **AWS:** EC2, S3, RDS
-- **CI/CD:** Jenkins, Docker
-- **Version Control:** GitHub
-- **기타:** Ngrok, Inotify, Shell Script
 
 
 ### 1. Docker로 Jenkins 설치
@@ -210,16 +218,15 @@ pipeline {
 </div>
 </details>
 
-
-<br>
-
 ### 4. AWS S3에 업로드 ☁️
 빌드된 .jar 파일을 AWS S3에 업로드하여 배포 준비를 마칩니다.
 
 ### 5. EC2에 배포 🖥️
 S3에서 EC2 인스턴스로 파일을 전송하여 애플리케이션을 배포합니다.
 
-### Trouble Shooting 🔥
+<br>
+
+## Trouble Shooting 🔥
 
 | 이 프로젝트에서는 여러 가지 기술을 사용하면서 발생한 이슈들과 그 해결 방법을 정리하였습니다.
 
@@ -250,9 +257,7 @@ S3에서 EC2 인스턴스로 파일을 전송하여 애플리케이션을 배포
 ---
 
 
-
-
 ### 🎯 결론
-AWS와 Jenkins를 활용한 CI/CD 파이프라인은 애플리케이션 개발 및 배포 시간을 단축하고, 품질을 보장하는 데 필수적입니다. 또한, 물리적 인프라와 AWS 클라우드를 조합한 하이브리드 접근 방식을 통해 비용 절감과 함께 유연한 인프라 운영이 가능하며, 이를 통해 최적의 효율을 달성할 수 있습니다.
+AWS와 Jenkins를 활용한 CI/CD 파이프라인은 애플리케이션 개발 및 배포 시간을 단축하고, 품질을 보장하는 데 필수적이다. 또한, 물리적 인프라와 AWS 클라우드를 조합한 하이브리드 접근 방식을 통해 비용 절감과 함께 유연한 인프라 운영이 가능하며, 이를 통해 최적의 효율을 달성할 수 있다.
 
-이러한 시스템을 통해 개발팀은 민첩하고 안정적인 개발 환경을 제공받고, 기업은 클라우드 비용을 효율적으로 관리할 수 있습니다.
+이러한 시스템을 통해 개발팀은 민첩하고 안정적인 개발 환경을 제공받고, 기업은 클라우드 비용을 효율적으로 관리할 수 있다.
