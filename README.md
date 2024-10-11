@@ -1,6 +1,3 @@
-# aws-pipe-line-construct
-AWS CI/CD Construct
-
 # AWS 및 Jenkins를 활용한 CI/CD 파이프라인 구축
 
 ## 개요 📝
