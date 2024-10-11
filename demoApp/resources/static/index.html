@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<h3>모든 부서 정보 검색</h3>
+	
+    <button id="deptList">모든 부서 정보 보기</button>
+    <div id="deptListView"></div>
+
+    <script type="text/javascript">
+    
+        // 페이지 로드 후 버튼에 클릭 이벤트 리스너 추가
+        document.getElementById('deptList').addEventListener('click', function() {
+            // Fetch API를 사용한 GET 요청
+            fetch('/alldepts')
+                .then(response => {
+                    // JSON 형식의 응답 데이터를 받음
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 받아온 부서 정보를 HTML로 표시
+                    console.log(data); // 받아온 데이터를 콘솔에 출력
+                    
+                    // 예시: 부서 정보를 리스트 형태로 표시
+                    let deptListDiv = document.getElementById('deptListView');
+                    
+                    deptListDiv.innerHTML = ''; // 기존 내용 지우기
+                    let ul = document.createElement('ul');
+
+                    data.forEach(dept => {
+                        let li = document.createElement('li');
+                        li.textContent = `부서 번호 : ${dept.deptno}, 부서명: ${dept.dname}, 부서위치: ${dept.loc}`;
+                        ul.appendChild(li);
+                    });
+
+                    deptListDiv.appendChild(ul);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        });
+    </script>
+</body>
+</html>
+	
+</body>
+</html>
